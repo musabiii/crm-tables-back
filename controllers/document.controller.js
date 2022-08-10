@@ -1,0 +1,1 @@
+// (select title from client c where c.id = d.client_id)
