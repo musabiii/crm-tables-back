@@ -12,3 +12,7 @@ app.use("/api", clientRouter);
 app.listen(PORT, () => {
   console.log(`${PORT} is started`);
 });
+
+app.get("/", (req, res) => {
+  res.send("ok");
+});
