@@ -4,7 +4,7 @@ class ServiceController {
   async getService(req, res) {
     const { id } = req.params;
     const result = await db.query(`select * from service where id = $1`, [id]);
-    res.json(result.rows);
+    res.json(result.rows[0]);
   }
 
   async getServices(req, res) {
@@ -25,22 +25,16 @@ class ServiceController {
   }
 
   async createService(req, res) {
-    const { title, inn, phone, mail, address } = req.body;
+    console.log('createService')
+    const { title, price, duration } = req.body;
+
     const result = await db.query(
       `
     INSERT INTO
     service (title, price, duration)
-    values
-    (
-        $1,
-        $2,
-        $3,
-        $4,
-        $5
-    );
-    `,
-      [title, price, duration]
-    );
+    values ($1,$2,$3) `,
+      [title, +price, +duration]
+    ).catch(e=>console.log(e));
     res.send("ok");
   }
 

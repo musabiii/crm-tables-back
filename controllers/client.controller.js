@@ -4,7 +4,7 @@ class ClientController {
   async getClient(req, res) {
     const { id } = req.params;
     const result = await db.query(`select * from client where id = $1`, [id]);
-    res.json(result.rows);
+    res.json(result.rows[0]);
   }
 
   async getClients(req, res) {

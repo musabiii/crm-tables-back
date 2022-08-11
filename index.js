@@ -1,5 +1,7 @@
 const express = require("express");
 const clientRouter = require("./routes/client.routes");
+const serviceRouter = require("./routes/service.routes");
+const documentRouter = require("./routes/document.routes");
 
 const app = express();
 
@@ -10,6 +12,8 @@ console.log("port", process.env.PORT);
 app.use(express.json());
 
 app.use("/api", clientRouter);
+app.use("/api", serviceRouter);
+app.use("/api", documentRouter);
 
 app.listen(PORT, () => {
   console.log(`${PORT} is started`);
