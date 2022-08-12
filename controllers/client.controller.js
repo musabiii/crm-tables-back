@@ -21,7 +21,7 @@ class ClientController {
     }
 
     const result = await db.query(query);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   }
 
   async createClient(req, res) {
