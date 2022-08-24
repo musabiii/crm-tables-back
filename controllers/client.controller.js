@@ -4,24 +4,44 @@ class ClientController {
   async getClient(req, res) {
     const { id } = req.params;
     const result = await db.query(`select * from client where id = $1`, [id]);
-    res.json(result.rows[0]);
+    // res.status(200).send(result.rows[0]);
+    res.status(200).send(result.rows[0]);
   }
 
   async getClients(req, res) {
-    const { filter, order } = req.body;
-    console.log(filter);
+    const {
+      filterCol,
+      filterCompare,
+      filterValue,
+      sortCol,
+      order,
+      page = 1,
+    } = req.query;
+
+
     let query = `select * from client`;
-    if (filter?.value) {
-      query = `${query} where ${filter.column} ${filter.compare} '${filter.value}'`;
-      console.log(query);
+
+    console.log("filterValue", filterValue);
+
+    let formatFilterValue = filterValue;
+    if (filterCompare === 'like') formatFilterValue = `%${filterValue}%`
+
+    if (filterValue) {
+      query = `${query} where ${filterCol} ${filterCompare} '${formatFilterValue}'`;
     }
 
-    if (order?.value) {
-      query = `${query} order by ${order.column} ${order.value}`;
+    if (order) {
+      query = `${query} order by ${sortCol} ${order}`;
     }
 
+    const perPage = 5;
+    const offset = (page - 1) * perPage;
+
+    query = `${query} offset ${offset} limit ${perPage}`;
+    console.log("query", query);
     const result = await db.query(query);
-    res.status(200).json(result.rows);
+
+    res.send(result.rows);
   }
 
   async createClient(req, res) {
