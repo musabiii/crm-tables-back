@@ -1,10 +1,10 @@
 const db = require("./../db");
 
 class ClientController {
+
   async getClient(req, res) {
     const { id } = req.params;
     const result = await db.query(`select * from client where id = $1`, [id]);
-    // res.status(200).send(result.rows[0]);
     res.status(200).send(result.rows[0]);
   }
 
@@ -34,7 +34,7 @@ class ClientController {
       query = `${query} order by ${sortCol} ${order}`;
     }
 
-    const perPage = 5;
+    const perPage = 20;
     const offset = (page - 1) * perPage;
 
     query = `${query} offset ${offset} limit ${perPage}`;

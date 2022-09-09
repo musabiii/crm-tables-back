@@ -34,6 +34,19 @@ values
         'lenina 4'
     );
 
+INSERT INTO
+    client (title, inn, phone, mail, address)
+values
+    (
+        "Alexander City",
+        "3256476",
+        "(230) 689-5625",
+        "jonas.batz@hotmail.com",
+        "Palermo"
+    );
+
+
+
 insert into
     service (title, price, duration)
 values
