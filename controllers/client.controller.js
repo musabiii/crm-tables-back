@@ -65,13 +65,18 @@ class ClientController {
   }
 
   async updateClient(req, res) {
+    console.log('update client')
     const { id } = req.params;
     const { title, inn, phone, mail, address } = req.body;
+    console.log(req.body)
     const result = await db.query(
       `update client set title = $1, inn = $2, phone=$3, mail=$4, address=$5 where id = $6`,
       [title, inn, phone, mail, address, id]
     );
-    res.send("ok");
+    console.log('result of db',result)
+    res.status(200).json(req.body);
+    // res.send("ok");
+
   }
 }
 
