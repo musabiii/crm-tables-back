@@ -46,6 +46,10 @@ class ClientController {
 
   async createClient(req, res) {
     const { title, inn, phone, mail, address } = req.body;
+    if (!title || !inn || !phone || !mail || !address) {
+      res.status(400).send("fill all options");
+      return;
+    }
     const result = await db.query(
       `
     INSERT INTO
@@ -61,7 +65,10 @@ class ClientController {
     `,
       [title, inn, phone, mail, address]
     );
-    res.send("ok");
+    console.log('result of db',result)
+
+    res.status(200).json(req.body);
+
   }
 
   async updateClient(req, res) {
@@ -75,8 +82,6 @@ class ClientController {
     );
     console.log('result of db',result)
     res.status(200).json(req.body);
-    // res.send("ok");
-
   }
 }
 

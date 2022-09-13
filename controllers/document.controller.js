@@ -10,29 +10,60 @@ class DocumentController {
     (select title from service s where s.id = d.service_id) service_title
     from document d
     where id = $1`, [id]);
-    res.json(result.rows[0]);
+    res.status(200).json(result.rows[0]);
   }
 
   async getDocuments(req, res) {
-    const { filter, order } = req.body;
+    // const { filter, order } = req.body;
+
+    const {
+      filterCol,
+      filterCompare,
+      filterValue,
+      sortCol,
+      order,
+      page = 1,
+    } = req.query;
+
     console.log(filter);
+
+    let formatFilterValue = filterValue;
+    if (filterCompare === 'like') formatFilterValue = `%${filterValue}%`
+
+    let subqueryClient = `select title from client c where c.id = d.client_id`;
+
+    if (filterValue && filterCol === 'client_title') {
+      subqueryClient = `${subqueryClient} and ${filterCol} ${filterCompare} '${filterValue}'`;
+    }
+
+    let subqueryService = `select title from service s where s.id = d.service_id`;
+
+    if (filterValue && filterCol === 'service_title') {
+      subqueryService = `${subqueryService} and ${filterCol} ${filterCompare} '${filterValue}'`;
+    }
+
     let query = `
-    select *, (select title from client c where c.id = d.client_id) client_title,
-    (select title from service s where s.id = d.service_id) service_title
+    select *, (${subqueryClient}) client_title,
+    (${subqueryService}) service_title
     from document d
     `;
 
-    if (filter?.value) {
-      query = `${query} where ${filter.column} ${filter.compare} '${filter.value}'`;
+    if (filterValue && (filterCol === 'id' || filterCol === 'date')) {
+      query = `${query} where ${filterCol} ${filterCompare} '${filterValue}'`;
       console.log(query);
     }
 
-    if (order?.value) {
-      query = `${query} order by ${order.column} ${order.value}`;
+
+    if (order) {
+      query = `${query} order by ${sortCol} ${order}`;
     }
 
+    const perPage = 20;
+    const offset = (page - 1) * perPage;
+    query = `${query} offset ${offset} limit ${perPage}`;
+
     const result = await db.query(query);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   }
 
   async createDocument(req, res) {
