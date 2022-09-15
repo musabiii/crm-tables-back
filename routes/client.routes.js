@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/client/:id',clientController.getClient)
 router.get('/client',clientController.getClients)
+router.get('/client-options',clientController.getOptions)
 router.post('/client',clientController.createClient)
 router.put('/client/:id',clientController.updateClient)
 

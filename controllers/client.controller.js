@@ -83,6 +83,16 @@ class ClientController {
     console.log('result of db',result)
     res.status(200).json(req.body);
   }
+
+  async getOptions(req,res) {
+    const {
+      title,
+    } = req.query;
+    if (!title)  res.status(200).send({});
+    const query = `select id,title from client where title like '%${title}%'`;
+    const result = await db.query(query);
+    res.status(200).send(result.rows[0]);
+  }
 }
 
 module.exports = new ClientController();
