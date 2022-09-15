@@ -25,7 +25,6 @@ class DocumentController {
       page = 1,
     } = req.query;
 
-    console.log(filter);
 
     let formatFilterValue = filterValue;
     if (filterCompare === 'like') formatFilterValue = `%${filterValue}%`
