@@ -89,9 +89,9 @@ class ClientController {
       title,
     } = req.query;
     if (!title)  res.status(200).send({});
-    const query = `select id,title from client where title like '%${title}%'`;
+    const query = `select id as value,title as text from client where title like '${title}%'`;
     const result = await db.query(query);
-    res.status(200).send(result.rows[0]);
+    res.status(200).send(result.rows);
   }
 }
 
