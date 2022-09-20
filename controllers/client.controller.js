@@ -84,6 +84,16 @@ class ClientController {
     res.status(200).json(req.body);
   }
 
+  async deleteClient(req,res) {
+    const { id } = req.params;
+    try {
+      const result = await db.query(`delete from client where id = $1`, [id]);
+      res.status(200).send(result);
+    } catch (error) {
+      res.status(400).send("something wrong");
+    }
+  }
+
   async getOptions(req,res) {
     const {
       title,

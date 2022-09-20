@@ -92,6 +92,16 @@ class DocumentController {
     );
     res.send("ok");
   }
+
+  async deleteDocument(req,res) {
+    const { id } = req.params;
+    try {
+      const result = await db.query(`delete from document where id = $1`, [id]);
+      res.status(200).send(result);
+    } catch (error) {
+      res.status(400).send("something wrong");
+    }
+  }
 }
 
 module.exports = new DocumentController();
