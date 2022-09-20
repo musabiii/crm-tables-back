@@ -67,6 +67,12 @@ class DocumentController {
 
   async createDocument(req, res) {
     const { date, client_id, service_id } = req.body;
+
+    if (!date || !client_id || !service_id) {
+      res.status(400).send("fill all options");
+      return;
+    }
+
     const result = await db.query(
       `
     INSERT INTO
@@ -74,7 +80,7 @@ class DocumentController {
     values ($1,$2,$3)`,
       [date, +client_id, +service_id]
     );
-    res.send("ok");
+    res.status(200).send("ok");
   }
 
   async updateDocument(req, res) {

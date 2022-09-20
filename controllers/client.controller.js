@@ -89,10 +89,13 @@ class ClientController {
       title,
     } = req.query;
     if (!title) {
-      res.status(200).send(null)
+      // res.status(200).send(null)
+      const query = `select id as value,title as text from client limit 20`;
+      const result = await db.query(query);
+      res.status(200).send(result.rows);
      return;
     };
-    const query = `select id as value,title as text from client where title like '${title}%' limit 10`;
+    const query = `select id as value,title as text from client where title like '${title}%' limit 20`;
     const result = await db.query(query);
     res.status(200).send(result.rows);
   }
