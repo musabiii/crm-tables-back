@@ -45,8 +45,6 @@ values
         "Palermo"
     );
 
-
-
 insert into
     service (title, price, duration)
 values
