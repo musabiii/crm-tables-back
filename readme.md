@@ -1,4 +1,6 @@
 express + postgresql
+
+for deploy
 ```console
-some:some
+docker-compose up -d 
 ```
