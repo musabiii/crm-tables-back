@@ -50,24 +50,29 @@ class ClientController {
       res.status(400).send("fill all options");
       return;
     }
-    const result = await db.query(
-      `
-    INSERT INTO
-    client (title, inn, phone, mail, address)
-    values
-    (
-        $1,
-        $2,
-        $3,
-        $4,
-        $5
-    );
-    `,
-      [title, inn, phone, mail, address]
-    );
-    console.log('result of db',result)
 
-    res.status(200).json(req.body);
+    try {
+      const result = await db.query(
+        `
+      INSERT INTO
+      client (title, inn, phone, mail, address)
+      values
+      (
+          $1,
+          $2,
+          $3,
+          $4,
+          $5
+      );
+      `,
+        [title, inn, phone, mail, address]
+      );
+      res.status(200).json(req.body);
+    } catch (error) {
+      res.status(400).json("error");
+
+    }
+
 
   }
 
@@ -76,12 +81,18 @@ class ClientController {
     const { id } = req.params;
     const { title, inn, phone, mail, address } = req.body;
     console.log(req.body)
-    const result = await db.query(
-      `update client set title = $1, inn = $2, phone=$3, mail=$4, address=$5 where id = $6`,
-      [title, inn, phone, mail, address, id]
-    );
-    console.log('result of db',result)
-    res.status(200).json(req.body);
+
+    try {
+      const result = await db.query(
+        `update client set title = $1, inn = $2, phone=$3, mail=$4, address=$5 where id = $6`,
+        [title, inn, phone, mail, address, id]
+      );
+      console.log('result of db',result)
+      res.status(200).json(req.body);
+    } catch (error) {
+      res.status(400).json("error");
+    }
+
   }
 
   async deleteClient(req,res) {

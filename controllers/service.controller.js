@@ -77,12 +77,19 @@ class ClientController {
     const { id } = req.params;
     const { title, price, duration } = req.body;
     console.log(req.body);
-    const result = await db.query(
-      `update service set title = $1, price = $2, duration=$3 where id = $4`,
-      [title, price, duration, id]
-    );
-    console.log("result of db", result);
-    res.status(200).json(req.body);
+
+    try {
+      const result = await db.query(
+        `update service set title = $1, price = $2, duration=$3 where id = $4`,
+        [title, price, duration, id]
+      );
+      console.log("result of db", result);
+      res.status(200).json(req.body);
+    } catch (error) {
+      res.status(400).json("error");
+
+    }
+
   }
 
   async deleteService(req,res) {
