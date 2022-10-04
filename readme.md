@@ -1,6 +1,6 @@
 express + postgresql
 
 for deploy
-```console
+```bash
 docker-compose up -d 
 ```
