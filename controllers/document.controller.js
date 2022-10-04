@@ -19,7 +19,7 @@ class DocumentController {
   async getDocuments(req, res) {
     // const { filter, order } = req.body;
 
-    const {
+    let {
       filterCol,
       filterCompare,
       filterValue,
@@ -31,26 +31,30 @@ class DocumentController {
     let formatFilterValue = filterValue;
     if (filterCompare === "like") formatFilterValue = `%${filterValue}%`;
 
-    let subqueryClient = `select title from client c where c.id = d.client_id`;
-
-    if (filterValue && filterCol === "client_title") {
-      subqueryClient = `${subqueryClient} and ${filterCol} ${filterCompare} '${filterValue}'`;
-    }
-
-    let subqueryService = `select title from service s where s.id = d.service_id`;
-
-    if (filterValue && filterCol === "service_title") {
-      subqueryService = `${subqueryService} and ${filterCol} ${filterCompare} '${filterValue}'`;
-    }
 
     let query = `
-    select *, (${subqueryClient}) client_title,
-    (${subqueryService}) service_title
-    from document d
-    `;
+    select d.*, c.title client_title,s.title service_title
+    from document d LEFT JOIN client c on d.client_id=c.id left join service s on d.service_id = s.id`
 
-    if (filterValue && (filterCol === "id" || filterCol === "date")) {
-      query = `${query} where ${filterCol} ${filterCompare} '${filterValue}'`;
+    if (filterCol==='client_title') {
+      filterCol = 'c.title'
+    } else if (filterCol==='service_title') {
+      filterCol = 's.title'
+    } else {
+      filterCol = 'd.'+filterCol;
+    }
+
+    if (sortCol==='client_title') {
+      sortCol = 'c.title'
+    } else if (sortCol==='service_title') {
+      sortCol = 's.title'
+    } else {
+      sortCol = 'd.'+sortCol;
+    }
+
+    // if (filterValue && (filterCol === "id" || filterCol === "date")) {
+    if (filterValue) {
+      query = `${query} where CAST(${filterCol} AS TEXT) ${filterCompare} '${formatFilterValue}'`;
       console.log(query);
     }
 

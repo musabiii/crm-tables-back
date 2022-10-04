@@ -8,7 +8,7 @@ class ClientController {
   }
 
   async getServices(req, res) {
-    const {
+    let {
       filterCol,
       filterCompare,
       filterValue,
@@ -17,6 +17,11 @@ class ClientController {
       page = 1,
     } = req.query;
 
+    // if (filterValue && filterCol!=="title") {
+    //   filterValue = Number(filterValue)
+    //   filterCompare = "=";
+    // }
+
     let query = `select * from service`;
 
     console.log("filterValue", filterValue);
@@ -24,8 +29,10 @@ class ClientController {
     let formatFilterValue = filterValue;
     if (filterCompare === "like") formatFilterValue = `%${filterValue}%`;
 
+    //CAST(price AS TEXT)
+
     if (filterValue) {
-      query = `${query} where ${filterCol} ${filterCompare} '${formatFilterValue}'`;
+      query = `${query} where CAST(${filterCol} AS TEXT) ${filterCompare} '${formatFilterValue}'`;
     }
 
     if (order) {
