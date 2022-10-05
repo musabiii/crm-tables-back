@@ -44,9 +44,15 @@ class ClientController {
 
     query = `${query} offset ${offset} limit ${perPage}`;
     console.log("query", query);
-    const result = await db.query(query);
 
-    res.send(result.rows);
+    try {
+      const result = await db.query(query);
+      res.status(200).send(result.rows);
+    } catch (error) {
+      res.status(400).send('error');
+
+    }
+
   }
 
   async createService(req, res) {

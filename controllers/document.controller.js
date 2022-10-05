@@ -66,8 +66,14 @@ class DocumentController {
     const offset = (page - 1) * perPage;
     query = `${query} offset ${offset} limit ${perPage}`;
 
-    const result = await db.query(query);
-    res.status(200).json(result.rows);
+    try {
+      console.log("query",query);
+      const result = await db.query(query);
+      res.status(200).json(result.rows);
+    } catch (error) {
+      res.status(400).json('error');
+    }
+
   }
 
   async createDocument(req, res) {
